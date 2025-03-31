@@ -8,18 +8,7 @@ public func configure(_ app: Application) async throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
-    app.databases.use(
-        .postgres(
-            configuration: .init(
-                hostname: "localhost",
-                username: "tyfn",
-                password: "",
-                database: "grocerydb",
-                tls: .disable
-            )
-        ),
-        as: .psql
-    )
+    app.databases.use(.postgres(hostname: "localhost", username: "tyfn", password: "", database: "grocerydb"), as: .psql)
     
     // register migrations
     app.migrations.add(CreateUsersTableMigration())
