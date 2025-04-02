@@ -1,7 +1,8 @@
 import Vapor
 import Fluent
 import FluentPostgresDriver
-
+import JWT
+import JWTKit
 
 // configures your application
 public func configure(_ app: Application) async throws {
@@ -16,6 +17,8 @@ public func configure(_ app: Application) async throws {
     // register the controllers
     try app.register(collection: UserController())
     
+    await app.jwt.keys.add(hmac: "SECRETKEY", digestAlgorithm: .sha256)
+
     // register routes
     try routes(app)
 }
