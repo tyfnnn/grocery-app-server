@@ -35,6 +35,7 @@ class UserController: RouteCollection, @unchecked Sendable {
         
         let result = try await req.password.async.verify(user.password, created: existingUser.password)
         
+        // implementing
         if !result {
             return LoginResponseDTO(error: true, reason: "Password is incorrect.")
         }
