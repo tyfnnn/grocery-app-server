@@ -9,6 +9,11 @@ import Foundation
 import GroceryAppSharedDTO
 import Vapor
 
-extension LoginResponseDTO: Content, @unchecked Sendable {
+extension LoginResponseDTO: @retroactive AsyncResponseEncodable {}
+extension LoginResponseDTO: @retroactive AsyncRequestDecodable {}
+extension LoginResponseDTO: @retroactive ResponseEncodable {}
+extension LoginResponseDTO: @retroactive RequestDecodable {}
+extension LoginResponseDTO: @retroactive Content {
     
 }
+
