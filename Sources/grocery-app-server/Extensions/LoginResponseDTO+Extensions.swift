@@ -9,6 +9,6 @@ import Foundation
 import GroceryAppSharedDTO
 import Vapor
 
-extension LoginResponseDTO: Content {
+extension LoginResponseDTO: Content, @unchecked Sendable {
     
 }
