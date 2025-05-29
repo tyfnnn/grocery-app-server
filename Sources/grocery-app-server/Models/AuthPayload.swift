@@ -9,9 +9,6 @@ import Foundation
 import JWT
 
 struct AuthPayload: JWTPayload {
-    func verify(using algorithm: some JWTAlgorithm) async throws {
-        try self.expiration.verifyNotExpired()
-    }
     
     typealias Payload = AuthPayload
     
@@ -22,6 +19,8 @@ struct AuthPayload: JWTPayload {
     
     var expiration: ExpirationClaim
     var userId: UUID
-
     
+    func verify(using algorithm: some JWTAlgorithm) async throws {
+        try self.expiration.verifyNotExpired()
+    }
 }

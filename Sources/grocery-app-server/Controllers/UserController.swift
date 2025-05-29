@@ -14,7 +14,7 @@ class UserController: RouteCollection, @unchecked Sendable {
     
     @Sendable func boot(routes: any RoutesBuilder) throws {
         let api = routes.grouped("api")
-        // api register
+        // api/register
         api.post("register", use: register)
         
         // api/login
