@@ -56,7 +56,11 @@ class GroceryController: RouteCollection, @unchecked Sendable {
         
         try await groceryItem.save(on: req.db)
         
-        return groceryItem
+        guard let groceryItemResponseDTO = GroceryItemResponseDTO(groceryItem) else {
+            throw Abort(.internalServerError)
+        }
+        
+        return groceryItemResponseDTO
     }
     
     func deleteGroceryCategory(req: Request) async throws -> GroceryCategoryResponseDTO {
