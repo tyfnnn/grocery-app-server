@@ -28,6 +28,36 @@ class GroceryController: RouteCollection, @unchecked Sendable {
         
         // POST: /api/users/:userId/grocery-categories/:groceryCategoryId/grocery-items
         api.post("grocery-categories", ":groceryCategoryId", "grocery-items", use: saveGroceryItem)
+        
+        // GET: /api/users/:userId/grocery-categories/:groceryCategoryId/grocery-items
+        api.get("grocery-categories", ":groceryCategoryId", "grocery-items", use: getGroceryItemsByGroceryCategory)
+    }
+    
+    func getGroceryItemsByGroceryCategory(req: Request) async throws -> [GroceryItemResponseDTO] {
+        guard let userId = req.parameters.get("userId", as: UUID.self),
+              let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)
+        else {
+            throw Abort(.badRequest)
+        }
+        
+        // validate the userId
+        guard let _ = try await User.find(userId, on: req.db) else {
+            throw Abort(.notFound)
+        }
+        
+        // find the grocery category
+        guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+            .filter(\.$user.$id == userId)
+            .filter(\.$id == groceryCategoryId)
+            .first() else {
+            throw Abort(.notFound)
+        }
+        
+        return try await GroceryItem.query(on: req.db)
+            .filter(\.$groceryCategory.$id == groceryCategoryId)
+            .all()
+            .compactMap(GroceryItemResponseDTO.init)
+  
     }
     
     func saveGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
@@ -52,7 +82,7 @@ class GroceryController: RouteCollection, @unchecked Sendable {
         // decoding // GroceryItemRequestDTO
         let groceryItemRequestDTO = try req.content.decode(GroceryItemRequestDTO.self)
         
-        let groceryItem = GroceryItem(title: groceryItemRequestDTO.title, price: groceryItemRequestDTO.price, quantity: groceryItemRequestDTO.quantity, groceryCategoryId: groceryCategoryId)
+        let groceryItem = GroceryItem(title: groceryItemRequestDTO.title, price: groceryItemRequestDTO.price, quantity: groceryItemRequestDTO.quantity, groceryCategoryId: groceryCategory.id!)
         
         try await groceryItem.save(on: req.db)
         
