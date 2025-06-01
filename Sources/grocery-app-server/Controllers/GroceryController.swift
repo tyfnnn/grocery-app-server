@@ -33,7 +33,7 @@ class GroceryController: RouteCollection, @unchecked Sendable {
         api.get("grocery-categories", ":groceryCategoryId", "grocery-items", use: getGroceryItemsByGroceryCategory)
         
         // DELETE: /api/users/:userId/grocery-categories/:groceryCategoryId/grocery-items/:groceryItemId
-        api.get("grocery-categories", ":groceryCategoryId", "grocery-items", ":groceryItemId", use: deleteGroceryItem)
+        api.delete("grocery-categories", ":groceryCategoryId", "grocery-items", ":groceryItemId", use: deleteGroceryItem)
     }
     
     func deleteGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
